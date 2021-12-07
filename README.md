@@ -10,4 +10,8 @@ eksctl create cluster \
   --nodes-max 2 \
   --region us-east-1
   
+  eksctl get cluster --name learnk8s-cluster --region eu-central-1
+  eksctl delete cluster --name learnk8s-cluster --region eu-central-1
+  
+  
   ```
