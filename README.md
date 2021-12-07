@@ -1,6 +1,6 @@
 ## EKS
 ```
-## default 2 nodes with m5.large
+## default: 2 nodes, m5.large, us-west-2
 
 eksctl create cluster \
   --name my-cluster \
