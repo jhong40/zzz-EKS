@@ -38,4 +38,10 @@ terraform init
 terraform plan
 terraform apply
 ```
+
+```
+git config --global credential.helper store
+git clone https://xxx
+
+```
  
