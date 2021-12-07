@@ -1,5 +1,7 @@
 ## EKS
 ```
+## default 2 nodes with m5.large
+
 eksctl create cluster \
   --name my-cluster \
   --node-type t3.medium \
