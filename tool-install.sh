@@ -1,3 +1,4 @@
+https://kubernetes.github.io/ingress-nginx/deploy/#aws
 
 curl -H "Host: example.com" http://localhost
 
