@@ -1,3 +1,8 @@
+
+curl -H "Host: example.com" http://localhost
+
+#################################
+
 sudo apt update; sudo apt install -y unzip
 
 ### install asw cli
