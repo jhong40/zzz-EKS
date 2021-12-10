@@ -1,5 +1,7 @@
 https://kubernetes.github.io/ingress-nginx/deploy/#aws
 
+k run util --image=praqma/network-multitool
+ 
 curl -H "Host: example.com" http://localhost
 
 #################################
