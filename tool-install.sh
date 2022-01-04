@@ -35,3 +35,13 @@ terraform -help
 
 ### aws configure
 
+
+### install ansible with python3
+sudo apt update
+sudo apt -y install python3-pip
+pip3 --version
+sudo pip3 install ansible
+ansible --version
+
+ 
+
