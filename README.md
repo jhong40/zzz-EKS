@@ -44,4 +44,10 @@ git config --global credential.helper store
 git clone https://xxx
 
 ```
- 
+
+```
+## env
+export ACCOUNT_ID=$(aws sts get-caller-identity --output text --query Account)
+export AWS_REGION=$(aws configure get region)
+export AZS=($(aws ec2 describe-availability-zones --query 'AvailabilityZones[].ZoneName' --output text --region $AWS_REGION))
+```
