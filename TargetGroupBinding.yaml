@@ -1,0 +1,44 @@
+### Using the existing LB (not creating new LB)
+
+# Using targetType: IP
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  name: mytgrp
+  namespace: game-2048
+spec:
+  networking:
+    ingress:
+    - from:
+      - securityGroup:
+          groupID: sg-058aaaaaaaaaaaaaaaaaaaaaaaa        # this SG is of the LB SGs. networking.ingress will add this SG to port 80 on EC2 Instance SG.
+      ports:
+      - port: 80
+        protocol: TCP
+  serviceRef:
+    name: service-2048
+    port: 80
+  targetGroupARN: arn:aws:elasticloadbalancing:us-west-1:1234567890000:targetgroup/mytgrp/158abcccccc
+  targetType: ip
+      
+# Using targetType: Instance      
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  name: k8s-game2048-service2-23accc5a86
+  namespace: game-2048
+spec:
+  networking:
+    ingress:
+    - from:
+      - securityGroup:
+          groupID: sg-060aaaaaaaaaaaa
+      ports:
+      - port: 31491
+        protocol: TCP
+  serviceRef:
+    name: service-2048
+    port: 80
+  targetGroupARN: arn:aws:elasticloadbalancing:us-west-1:1234567890000:targetgroup/mytgrp/158abcccccc
+  targetType: instance
+                                                                                                                                                 ~                                   
