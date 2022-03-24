@@ -75,3 +75,17 @@ do
 done
 
 aws efs describe-mount-targets --file-system-id $FILE_SYSTEM_ID --output json | jq --raw-output '.MountTargets[].LifeCycleState'
+
+```
+
+```
+## AWS Load balancer controller"
+
+helm upgrade -i aws-load-balancer-controller \
+    eks/aws-load-balancer-controller \
+     -n kube-system \
+     --set clusterName=eksworkshop-eksctl \
+     --set serviceAccount.create=false \
+     --set serviceAccount.name=aws-load-balancer-controller \
+     --set image.repository=013241004608.dkr.ecr.us-gov-west-1.amazonaws.com/amazon/aws-load-balancer-controller
+```
