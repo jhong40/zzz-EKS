@@ -82,9 +82,24 @@ kubectl get svc kube-ops-view | tail -n 1 | awk '{ print "Kube-ops-view URL = ht
   ```
   kubectl get apiservice v1beta1.metrics.k8s.io -o json | jq '.status'
 ```
+### Deploy Sample App
+```
+kubectl create deployment php-apache --image=us.gcr.io/k8s-artifacts-prod/hpa-example
+kubectl set resources deploy php-apache --requests=cpu=200m
+kubectl expose deploy php-apache --port 80
+
+kubectl get pod -l app=php-apache
+```
+### Create an HPA resource
+```
+kubectl autoscale deployment php-apache `#The target average CPU utilization` \
+    --cpu-percent=50 \
+    --min=1 `#The lower limit for the number of pods that can be set by the autoscaler` \
+    --max=10 `#The upper limit for the number of pods that can be set by the autoscaler`
+```
   
   
-###########################  
+###############################################  
   
 </details>
 
