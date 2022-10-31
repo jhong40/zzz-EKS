@@ -182,6 +182,15 @@ eksctl create iamserviceaccount \
 ```
 kubectl -n kube-system describe sa cluster-autoscaler
 ```  
+### Deploy the Cluster Autoscaler
+```
+kubectl apply -f https://www.eksworkshop.com/beginner/080_scaling/deploy_ca.files/cluster-autoscaler-autodiscover.yaml
+kubectl -n kube-system \
+    annotate deployment.apps/cluster-autoscaler \
+    cluster-autoscaler.kubernetes.io/safe-to-evict="false"
+```
+  
+  
   
 ###############################################AutoScaling
   
