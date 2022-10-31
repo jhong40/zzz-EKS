@@ -90,7 +90,6 @@ kubectl get svc kube-ops-view | tail -n 1 | awk '{ print "Kube-ops-view URL = ht
 
 
 
-
 <details>
   <summary>EFS</summary>
 ```
@@ -120,7 +119,7 @@ aws efs describe-mount-targets --file-system-id $FILE_SYSTEM_ID --output json | 
 </details>
   
 <details>
-<summary>Load Balancer</summary>  
+  <summary>Load Balancer</summary>  
   
 ```
 ## AWS Load balancer controller"
@@ -133,4 +132,4 @@ helm upgrade -i aws-load-balancer-controller \
      --set serviceAccount.name=aws-load-balancer-controller \
      --set image.repository=013241004608.dkr.ecr.us-gov-west-1.amazonaws.com/amazon/aws-load-balancer-controller
 ```
-  </details>
+</details>
