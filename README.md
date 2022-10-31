@@ -92,6 +92,7 @@ kubectl get svc kube-ops-view | tail -n 1 | awk '{ print "Kube-ops-view URL = ht
 
 <details>
   <summary>EFS</summary>
+  
 ```
 ## EFS
 CLUSTER_NAME=eksworkshop-eksctl
