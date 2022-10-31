@@ -52,6 +52,18 @@ export AWS_REGION=$(aws configure get region)
 export AZS=($(aws ec2 describe-availability-zones --query 'AvailabilityZones[].ZoneName' --output text --region $AWS_REGION))
 ```
 
+<details>
+  <summary>AutoScaling App and Cluster</summary>
+  
+  ## INSTALL KUBE-OPS-VIEW
+  ```
+  helm install kube-ops-view \
+stable/kube-ops-view \
+--set service.type=LoadBalancer \
+--set rbac.create=True
+```
+</details>
+
 
 ```
 ## EFS
