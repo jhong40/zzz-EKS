@@ -1,4 +1,6 @@
 ## EKS
+<details>
+  <summary>create cluster</summary>
 ```
 ## default: 2 nodes, m5.large ($0.096), us-west-2
 
@@ -51,6 +53,8 @@ export ACCOUNT_ID=$(aws sts get-caller-identity --output text --query Account)
 export AWS_REGION=$(aws configure get region)
 export AZS=($(aws ec2 describe-availability-zones --query 'AvailabilityZones[].ZoneName' --output text --region $AWS_REGION))
 ```
+
+</details>
 
 <details>
   <summary>AutoScaling App and Cluster</summary>
