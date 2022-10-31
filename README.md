@@ -55,14 +55,28 @@ export AZS=($(aws ec2 describe-availability-zones --query 'AvailabilityZones[].Z
 <details>
   <summary>AutoScaling App and Cluster</summary>
   
-  ## INSTALL KUBE-OPS-VIEW
-  ```
-  helm install kube-ops-view \
+### INSTALL KUBE-OPS-VIEW
+```
+helm install kube-ops-view \
 stable/kube-ops-view \
 --set service.type=LoadBalancer \
 --set rbac.create=True
+  
+helm list
+kubectl get svc kube-ops-view | tail -n 1 | awk '{ print "Kube-ops-view URL = http://"$4 }'
+# Kube-ops-view URL = http://<URL_PREFIX_ELB>.amazonaws.com
+  
+  
 ```
+  
+  
 </details>
+
+
+
+
+
+
 
 
 ```
