@@ -169,6 +169,19 @@ aws iam create-policy   \
   --policy-name k8s-asg-policy \
   --policy-document file://~/environment/cluster-autoscaler/k8s-asg-policy.json
 ```  
+### Create 
+```
+eksctl create iamserviceaccount \
+    --name cluster-autoscaler \
+    --namespace kube-system \
+    --cluster eksworkshop-eksctl \
+    --attach-policy-arn "arn:aws:iam::${ACCOUNT_ID}:policy/k8s-asg-policy" \
+    --approve \
+    --override-existing-serviceaccounts
+```
+```
+kubectl -n kube-system describe sa cluster-autoscaler
+```  
   
 ###############################################AutoScaling
   
