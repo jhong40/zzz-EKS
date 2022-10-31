@@ -70,7 +70,6 @@ kubectl get svc kube-ops-view | tail -n 1 | awk '{ print "Kube-ops-view URL = ht
 # Kube-ops-view URL = http://<URL_PREFIX_ELB>.amazonaws.com
 ```
   
-```
   
   
 </details>
