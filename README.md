@@ -91,9 +91,6 @@ kubectl get svc kube-ops-view | tail -n 1 | awk '{ print "Kube-ops-view URL = ht
 
 
 
-
-
-
 <details>
   <summary>EFS</summary>
 ```
@@ -120,10 +117,11 @@ done
 aws efs describe-mount-targets --file-system-id $FILE_SYSTEM_ID --output json | jq --raw-output '.MountTargets[].LifeCycleState'
 
 ```
-  </details>
+</details>
   
 <details>
-  <summary>Load Balancer</summary>  
+<summary>Load Balancer</summary>  
+  
 ```
 ## AWS Load balancer controller"
 
