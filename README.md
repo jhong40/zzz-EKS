@@ -133,7 +133,42 @@ aws autoscaling \
     --query "AutoScalingGroups[? Tags[? (Key=='eks:cluster-name') && Value=='eksworkshop-eksctl']].[AutoScalingGroupName, MinSize, MaxSize,DesiredCapacity]" \
     --output table
 ```  
-  
+### IAM roles for service accounts
+```
+  ### Enabling IAM roles for service accounts on your cluster
+  eksctl utils associate-iam-oidc-provider \
+    --cluster eksworkshop-eksctl \
+    --approve
+```
+### Creating an IAM policy 
+```
+mkdir ~/environment/cluster-autoscaler
+
+cat <<EoF > ~/environment/cluster-autoscaler/k8s-asg-policy.json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "autoscaling:DescribeAutoScalingGroups",
+                "autoscaling:DescribeAutoScalingInstances",
+                "autoscaling:DescribeLaunchConfigurations",
+                "autoscaling:DescribeTags",
+                "autoscaling:SetDesiredCapacity",
+                "autoscaling:TerminateInstanceInAutoScalingGroup",
+                "ec2:DescribeLaunchTemplateVersions"
+            ],
+            "Resource": "*",
+            "Effect": "Allow"
+        }
+    ]
+}
+EoF
+
+aws iam create-policy   \
+  --policy-name k8s-asg-policy \
+  --policy-document file://~/environment/cluster-autoscaler/k8s-asg-policy.json
+```  
   
 ###############################################AutoScaling
   
