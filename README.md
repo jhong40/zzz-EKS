@@ -96,6 +96,16 @@ kubectl autoscale deployment php-apache `#The target average CPU utilization` \
     --cpu-percent=50 \
     --min=1 `#The lower limit for the number of pods that can be set by the autoscaler` \
     --max=10 `#The upper limit for the number of pods that can be set by the autoscaler`
+kubectl get hpa
+
+```
+### Generate load to trigger scaling
+```
+kubectl run -i --tty load-generator --image=busybox /bin/sh
+  while true; do wget -q -O - http://php-apache; done
+```
+```
+kubectl get hpa -w
 ```
   
   
