@@ -1,6 +1,7 @@
 ## EKS
 <details>
   <summary>create cluster</summary>
+  
 ```
 ## default: 2 nodes, m5.large ($0.096), us-west-2
 
