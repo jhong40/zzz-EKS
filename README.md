@@ -353,7 +353,52 @@ aws sts get-caller-identity
 kubectl get pods -n rbac-test  # pod forbiden  
 ```  
 ### CREATE THE ROLE AND BINDING  
+```
+unset AWS_SECRET_ACCESS_KEY
+unset AWS_ACCESS_KEY_ID
+aws sts get-caller-identity   #gliu
   
+cat << EoF > rbacuser-role.yaml
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: rbac-test
+  name: pod-reader
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["list","get","watch"]
+- apiGroups: ["extensions","apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch"]
+EoF
+
+cat << EoF > rbacuser-role-binding.yaml
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: read-pods
+  namespace: rbac-test
+subjects:
+- kind: User
+  name: rbac-user
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
+EoF
+
+kubectl apply -f rbacuser-role.yaml
+kubectl apply -f rbacuser-role-binding.yaml
+```  
+### VERIFY THE ROLE AND BINDING
+```
+. rbacuser_creds.sh; aws sts get-caller-identity
+kubectl get pods -n rbac-test    # 2work
+kubectl get pods -n kube-system  # not work 
+  
+```  
   
 ############################################### RBAC  
 </details>  
