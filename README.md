@@ -399,6 +399,19 @@ kubectl get pods -n rbac-test    # 2work
 kubectl get pods -n kube-system  # not work 
   
 ```  
+### Cleanup
+```
+unset AWS_SECRET_ACCESS_KEY
+unset AWS_ACCESS_KEY_ID
+kubectl delete namespace rbac-test
+rm rbacuser_creds.sh
+rm rbacuser-role.yaml
+rm rbacuser-role-binding.yaml
+aws iam delete-access-key --user-name=rbac-user --access-key-id=$(jq -r .AccessKey.AccessKeyId /tmp/create_output.json)
+aws iam delete-user --user-name rbac-user
+rm /tmp/create_output.json
+  
+```  
   
 ############################################### RBAC  
 </details>  
