@@ -332,7 +332,30 @@ export AWS_SECRET_ACCESS_KEY=$(jq -r .AccessKey.SecretAccessKey /tmp/create_outp
 export AWS_ACCESS_KEY_ID=$(jq -r .AccessKey.AccessKeyId /tmp/create_output.json)
 EoF
 ```  
+### MAP AN IAM USER TO K8S
+```
+kubectl get configmap -n kube-system aws-auth -o yaml | grep -v "creationTimestamp\|resourceVersion\|selfLink\|uid" | sed '/^  annotations:/,+2 d' > aws-auth.yaml
+
+cat << EoF >> aws-auth.yaml
+data:
+  mapUsers: |
+    - userarn: arn:aws:iam::${ACCOUNT_ID}:user/rbac-user
+      username: rbac-user
+EoF
+
+cat aws-auth.yaml
+kubectl apply -f aws-auth.yaml
+```  
+### TEST THE NEW USER
+```
+. rbacuser_creds.sh
+aws sts get-caller-identity
+kubectl get pods -n rbac-test  # pod forbiden  
+```  
+### CREATE THE ROLE AND BINDING  
   
+  
+############################################### RBAC  
 </details>  
   
 
