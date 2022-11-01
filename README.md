@@ -295,7 +295,23 @@ unset K8S_VERSION
   
 </details>
 
+<details>
+  <summary>AUTOSCALING WITH KARPENTER</summary>
+  
+### Environment Variables
+```
+export KARPENTER_VERSION=v0.16.0
 
+export CLUSTER_NAME=$(eksctl get clusters -o json | jq -r '.[0].Name')
+export ACCOUNT_ID=$(aws sts get-caller-identity --output text --query Account)
+export AWS_REGION=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r '.region')
+```
+  
+
+###############################################KARPENTER  
+</details>  
+  
+  
 
 <details>
   <summary>EFS</summary>
