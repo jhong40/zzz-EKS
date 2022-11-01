@@ -311,6 +311,29 @@ export AWS_REGION=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/doc
 ###############################################KARPENTER  
 </details>  
   
+
+<details>
+  <summary>RBAC</summary>
+
+### Install Test Pod  
+```
+kubectl create namespace rbac-test
+kubectl create deploy nginx --image=nginx -n rbac-test
+kubectl get all -n rbac-test 
+```
+### Create User
+```
+aws iam create-user --user-name rbac-user
+aws iam create-access-key --user-name rbac-user | tee /tmp/create_output.json
+```
+```
+cat << EoF > rbacuser_creds.sh
+export AWS_SECRET_ACCESS_KEY=$(jq -r .AccessKey.SecretAccessKey /tmp/create_output.json)
+export AWS_ACCESS_KEY_ID=$(jq -r .AccessKey.AccessKeyId /tmp/create_output.json)
+EoF
+```  
+  
+</details>  
   
 
 <details>
