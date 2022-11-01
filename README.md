@@ -335,16 +335,21 @@ EoF
 ### MAP AN IAM USER TO K8S  (arn:aws:iam => arn:aws-us-gov:iam)
 ```
 kubectl get configmap -n kube-system aws-auth -o yaml | grep -v "creationTimestamp\|resourceVersion\|selfLink\|uid" | sed '/^  annotations:/,+2 d' > aws-auth.yaml
-
-cat << EoF >> aws-auth.yaml
+```
+  
+vi aws-auth.yaml   # add the following
+(arn:aws:iam => arn:aws-us-gov:iam)
+```  
 data:
   mapUsers: |
     - userarn: arn:aws:iam::${ACCOUNT_ID}:user/rbac-user       
       username: rbac-user
-EoF
+```
 
+```  
 cat aws-auth.yaml
 kubectl apply -f aws-auth.yaml
+kubectl get configmap -n kube-system aws-auth -o yaml   
 ```  
 ### TEST THE NEW USER
 ```
@@ -413,14 +418,13 @@ rm /tmp/create_output.json
 ```  
 Remove this part from aws-auth.yaml
 ```
-data:
   mapUsers: |
     []
 ```  
 ```
 kubectl apply -f aws-auth.yaml
 rm aws-auth.yaml
-  
+ 
 ```  
   
 ############################################### RBAC  
