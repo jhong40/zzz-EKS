@@ -332,7 +332,7 @@ export AWS_SECRET_ACCESS_KEY=$(jq -r .AccessKey.SecretAccessKey /tmp/create_outp
 export AWS_ACCESS_KEY_ID=$(jq -r .AccessKey.AccessKeyId /tmp/create_output.json)
 EoF
 ```  
-### MAP AN IAM USER TO K8S  (arn:aws:iam => arn:aws-us-gov:iam)
+### MAP AN IAM USER TO K8S  
 ```
 kubectl get configmap -n kube-system aws-auth -o yaml | grep -v "creationTimestamp\|resourceVersion\|selfLink\|uid" | sed '/^  annotations:/,+2 d' > aws-auth.yaml
 ```
