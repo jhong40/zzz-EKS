@@ -746,7 +746,7 @@ kubectx
 </details>  
 
 <details>
-  <summary>IAM ROLES FOR SERVICE ACCOUNTS (IRSA)<details>
+  <summary>IAM ROLES FOR SERVICE ACCOUNTS (IRSA)</summary>
 
 ### Prepair  
 ```
@@ -763,6 +763,8 @@ eksctl utils associate-iam-oidc-provider --cluster eksworkshop-eksctl --approve
 ```    
 ############################################### IRSA     
 </details>
+    
+    
 
 <details>
   <summary>EFS</summary>
