@@ -805,10 +805,37 @@ EoF
 
 kubectl apply -f ~/environment/irsa/job-s3.yaml
 kubectl get job -l app=eks-iam-test-s3
-kubectl logs -l app=eks-iam-test-s3
-  
+kubectl logs -l app=eks-iam-test-s3  
+```  
+#### List EC2 Instances
+```
+cat <<EoF> ~/environment/irsa/job-ec2.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: eks-iam-test-ec2
+spec:
+  template:
+    metadata:
+      labels:
+        app: eks-iam-test-ec2
+    spec:
+      serviceAccountName: iam-test
+      containers:
+      - name: eks-iam-test
+        image: amazon/aws-cli:latest
+        args: ["ec2", "describe-instances", "--region", "${AWS_REGION}"]
+      restartPolicy: Never
+  backoffLimit: 0
+EoF
+
+kubectl apply -f ~/environment/irsa/job-ec2.yaml
+
+kubectl get job -l app=eks-iam-test-ec2
+kubectl logs -l app=eks-iam-test-ec2   #sholdnot work
   
 ```  
+  
 ############################################### IRSA     
 </details>
     
