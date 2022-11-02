@@ -782,6 +782,8 @@ kubectl describe sa iam-test
 - job-ec2.yaml: that will output the result of the command aws ec2 describe-instances --region ${AWS_REGION} (this job should failed).  
 #### List S3 bucket  
 ```
+aws s3 mb s3://eksworkshop-$ACCOUNT_ID-$AWS_REGION --region $AWS_REGION
+  
 mkdir ~/environment/irsa
 
 cat <<EoF> ~/environment/irsa/job-s3.yaml
@@ -802,7 +804,7 @@ spec:
         args: ["s3", "ls"]
       restartPolicy: Never
 EoF
-
+  
 kubectl apply -f ~/environment/irsa/job-s3.yaml
 kubectl get job -l app=eks-iam-test-s3
 kubectl logs -l app=eks-iam-test-s3  
@@ -847,6 +849,7 @@ eksctl delete iamserviceaccount \
     --wait
 
 rm -rf ~/environment/irsa/  
+aws s3 rb s3://eksworkshop-$ACCOUNT_ID-$AWS_REGION --region $AWS_REGION --force
 ```  
 ############################################### IRSA     
 </details>
