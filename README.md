@@ -761,6 +761,54 @@ aws eks describe-cluster --name eksworkshop-eksctl --query cluster.identity.oidc
 eksctl version  # > 0.57.0
 eksctl utils associate-iam-oidc-provider --cluster eksworkshop-eksctl --approve    
 ```    
+### CREATING AN IAM ROLE FOR SERVICE ACCOUNT
+```
+aws iam list-policies --query 'Policies[?PolicyName==`AmazonS3ReadOnlyAccess`].Arn'
+eksctl create iamserviceaccount \
+    --name iam-test \
+    --namespace default \
+    --cluster eksworkshop-eksctl \
+    --attach-policy-arn arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess \
+    --approve \
+    --override-existing-serviceaccounts  
+```  
+### SPECIFYING AN IAM ROLE FOR SERVICE ACCOUNT
+```
+kubectl get sa iam-test
+kubectl describe sa iam-test 
+```  
+### DEPLOY SAMPLE POD
+- job-s3.yaml: that will output the result of the command aws s3 ls (this job should be successful).
+- job-ec2.yaml: that will output the result of the command aws ec2 describe-instances --region ${AWS_REGION} (this job should failed).  
+#### List S3 bucket  
+```
+mkdir ~/environment/irsa
+
+cat <<EoF> ~/environment/irsa/job-s3.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: eks-iam-test-s3
+spec:
+  template:
+    metadata:
+      labels:
+        app: eks-iam-test-s3
+    spec:
+      serviceAccountName: iam-test
+      containers:
+      - name: eks-iam-test
+        image: amazon/aws-cli:latest
+        args: ["s3", "ls"]
+      restartPolicy: Never
+EoF
+
+kubectl apply -f ~/environment/irsa/job-s3.yaml
+kubectl get job -l app=eks-iam-test-s3
+kubectl logs -l app=eks-iam-test-s3
+  
+  
+```  
 ############################################### IRSA     
 </details>
     
