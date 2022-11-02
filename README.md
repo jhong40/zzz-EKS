@@ -734,7 +734,14 @@ cat $KUBECONFIG | yq e '.users.[].user.exec.args += ["--profile", "admin"]' - --
 kubectl run nginx-admin --image=nginx  #work
 kubectl get pods -A  #work
   
-```  
+```
+### Switching between different contexts
+```
+export KUBECONFIG=/tmp/kubeconfig-dev:/tmp/kubeconfig-integ:/tmp/kubeconfig-admin
+curl -sSLO https://raw.githubusercontent.com/ahmetb/kubectx/master/kubectx && chmod 755 kubectx && sudo mv kubectx /usr/local/bin
+kubectx
+
+```
 ############################################### IAM group to manager kube  
 </details>  
 
