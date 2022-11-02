@@ -434,8 +434,9 @@ rm aws-auth.yaml
 
 <details>
   <summary>USING IAM GROUPS TO MANAGE KUBERNETES CLUSTER ACCESS</summary>
+  
   ### CREATE IAM ROLES (arn:aws -> arn:aws-us-gov)
-  ```
+```
   export ACCOUNT_ID=$(aws sts get-caller-identity --output text --query Account)
 export POLICY=$(echo -n '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"AWS":"arn:aws-us-gov:iam::'; echo -n "$ACCOUNT_ID"; echo -n ':root"},"Action":"sts:AssumeRole","Condition":{}}]}')
 
