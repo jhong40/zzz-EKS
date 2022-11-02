@@ -709,8 +709,32 @@ EoF
 ```
 aws sts get-caller-identity --profile dev
 aws sts get-caller-identity --profile admin
-
 ```
+### With dev profile
+```
+export KUBECONFIG=/tmp/kubeconfig-dev && eksctl utils write-kubeconfig --cluster eksworkshop-eksctl
+cat $KUBECONFIG | yq e '.users.[].user.exec.args += ["--profile", "dev"]' - -- | sed 's/eksworkshop-eksctl./eksworkshop-eksctl-dev./g' | sponge $KUBECONFIG
+
+kubectl run nginx-dev --image=nginx -n development
+kubectl get pods -n integration  # pods is forbidden: User "dev-user" cannot list resource
+```
+### Test with integ profile
+```
+export KUBECONFIG=/tmp/kubeconfig-integ && eksctl utils write-kubeconfig --cluster=eksworkshop-eksctl
+cat $KUBECONFIG | yq e '.users.[].user.exec.args += ["--profile", "integ"]' - -- | sed 's/eksworkshop-eksctl./eksworkshop-eksctl-integ./g' | sponge $KUBECONFIG
+
+kubectl run nginx-integ --image=nginx -n integration  #work
+kubectl get pods -n development  # should not working
+ 
+```  
+### Test with admin profile
+```
+export KUBECONFIG=/tmp/kubeconfig-admin && eksctl utils write-kubeconfig --cluster=eksworkshop-eksctl
+cat $KUBECONFIG | yq e '.users.[].user.exec.args += ["--profile", "admin"]' - -- | sed 's/eksworkshop-eksctl./eksworkshop-eksctl-admin./g' | sponge $KUBECONFIG
+kubectl run nginx-admin --image=nginx  #work
+kubectl get pods -A  #work
+  
+```  
 ############################################### IAM group to manager kube  
 </details>  
 
