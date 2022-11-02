@@ -602,8 +602,115 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 EOF
 ```  
-  
-  
+```
+cat << EOF | kubectl apply -f - -n integration
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: integ-role
+rules:
+  - apiGroups:
+      - ""
+      - "apps"
+      - "batch"
+      - "extensions"
+    resources:
+      - "configmaps"
+      - "cronjobs"
+      - "deployments"
+      - "events"
+      - "ingresses"
+      - "jobs"
+      - "pods"
+      - "pods/attach"
+      - "pods/exec"
+      - "pods/log"
+      - "pods/portforward"
+      - "secrets"
+      - "services"
+    verbs:
+      - "create"
+      - "delete"
+      - "describe"
+      - "get"
+      - "list"
+      - "patch"
+      - "update"
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: integ-role-binding
+subjects:
+- kind: User
+  name: integ-user
+roleRef:
+  kind: Role
+  name: integ-role
+  apiGroup: rbac.authorization.k8s.io
+EOF
+```
+### CONFIGURE KUBERNETES ROLE ACCESS
+```
+eksctl create iamidentitymapping \
+  --cluster eksworkshop-eksctl \
+  --arn arn:aws:iam::${ACCOUNT_ID}:role/k8sDev \
+  --username dev-user
+
+eksctl create iamidentitymapping \
+  --cluster eksworkshop-eksctl \
+  --arn arn:aws:iam::${ACCOUNT_ID}:role/k8sInteg \
+  --username integ-user
+
+eksctl create iamidentitymapping \
+  --cluster eksworkshop-eksctl \
+  --arn arn:aws:iam::${ACCOUNT_ID}:role/k8sAdmin \
+  --username admin \
+  --group system:masters
+
+kubectl get cm -n kube-system aws-auth -o yaml
+eksctl get iamidentitymapping --cluster eksworkshop-eksctl
+```
+### TEST EKS ACCESS
+```
+mkdir -p ~/.aws
+
+cat << EoF >> ~/.aws/config
+[profile admin]
+role_arn=arn:aws-us-gov:iam::${ACCOUNT_ID}:role/k8sAdmin
+source_profile=eksAdmin
+
+[profile dev]
+role_arn=arn:aws-us-gov:iam::${ACCOUNT_ID}:role/k8sDev
+source_profile=eksDev
+
+[profile integ]
+role_arn=arn:aws-us-gov:iam::${ACCOUNT_ID}:role/k8sInteg
+source_profile=eksInteg
+
+EoF
+
+cat << EoF >> ~/.aws/credentials
+
+[eksAdmin]
+aws_access_key_id=$(jq -r .AccessKey.AccessKeyId /tmp/PaulAdmin.json)
+aws_secret_access_key=$(jq -r .AccessKey.SecretAccessKey /tmp/PaulAdmin.json)
+
+[eksDev]
+aws_access_key_id=$(jq -r .AccessKey.AccessKeyId /tmp/JeanDev.json)
+aws_secret_access_key=$(jq -r .AccessKey.SecretAccessKey /tmp/JeanDev.json)
+
+[eksInteg]
+aws_access_key_id=$(jq -r .AccessKey.AccessKeyId /tmp/PierreInteg.json)
+aws_secret_access_key=$(jq -r .AccessKey.SecretAccessKey /tmp/PierreInteg.json)
+
+EoF
+```
+```
+aws sts get-caller-identity --profile dev
+aws sts get-caller-identity --profile admin
+
+```
 ############################################### IAM group to manager kube  
 </details>  
 
