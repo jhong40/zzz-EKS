@@ -835,7 +835,19 @@ kubectl get job -l app=eks-iam-test-ec2
 kubectl logs -l app=eks-iam-test-ec2   #sholdnot work
   
 ```  
-  
+#### Cleanup
+```
+kubectl delete -f ~/environment/irsa/job-s3.yaml
+kubectl delete -f ~/environment/irsa/job-ec2.yaml
+
+eksctl delete iamserviceaccount \
+    --name iam-test \
+    --namespace default \
+    --cluster eksworkshop-eksctl \
+    --wait
+
+rm -rf ~/environment/irsa/  
+```  
 ############################################### IRSA     
 </details>
     
