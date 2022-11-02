@@ -745,7 +745,24 @@ kubectx
 ############################################### IAM group to manager kube  
 </details>  
 
+<details>
+  <summary>IAM ROLES FOR SERVICE ACCOUNTS (IRSA)<details>
 
+### Prepair  
+```
+kubectl version --short  #>1.16
+aws --version  #>1.19.122
+
+# Retrieve OpenID Connect issuer URL    
+aws eks describe-cluster --name eksworkshop-eksctl --query cluster.identity.oidc.issuer --output text    
+```
+### CREATE AN OIDC IDENTITY PROVIDER
+```
+eksctl version  # > 0.57.0
+eksctl utils associate-iam-oidc-provider --cluster eksworkshop-eksctl --approve    
+```    
+############################################### IRSA     
+</details>
 
 <details>
   <summary>EFS</summary>
