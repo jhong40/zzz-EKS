@@ -548,6 +548,61 @@ aws iam create-access-key --user-name PaulAdmin | tee /tmp/PaulAdmin.json
 aws iam create-access-key --user-name JeanDev | tee /tmp/JeanDev.json
 aws iam create-access-key --user-name PierreInteg | tee /tmp/PierreInteg.json
 ```
+
+### CONFIGURE KUBERNETES RBAC
+```
+kubectl create namespace integration
+kubectl create namespace development 
+```  
+```
+cat << EOF | kubectl apply -f - -n development
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: dev-role
+rules:
+  - apiGroups:
+      - ""
+      - "apps"
+      - "batch"
+      - "extensions"
+    resources:
+      - "configmaps"
+      - "cronjobs"
+      - "deployments"
+      - "events"
+      - "ingresses"
+      - "jobs"
+      - "pods"
+      - "pods/attach"
+      - "pods/exec"
+      - "pods/log"
+      - "pods/portforward"
+      - "secrets"
+      - "services"
+    verbs:
+      - "create"
+      - "delete"
+      - "describe"
+      - "get"
+      - "list"
+      - "patch"
+      - "update"
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: dev-role-binding
+subjects:
+- kind: User
+  name: dev-user
+roleRef:
+  kind: Role
+  name: dev-role
+  apiGroup: rbac.authorization.k8s.io
+EOF
+```  
+  
   
 ############################################### IAM group to manager kube  
 </details>  
