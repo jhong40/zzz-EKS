@@ -1270,6 +1270,7 @@ cd ~/environment/calico_resources
 wget https://eksworkshop.com/beginner/120_network-policies/calico/stars_policy_demo/apply_network_policies.files/allow-ui.yaml
 wget https://eksworkshop.com/beginner/120_network-policies/calico/stars_policy_demo/apply_network_policies.files/allow-ui-client.yaml
 ```  
+```  
 cat allow-ui.yaml
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -1345,9 +1346,9 @@ spec:
         - protocol: TCP
           port: 80  
 EOF
+```  
   
-  
-``` 
+
 
   
 </details>  
