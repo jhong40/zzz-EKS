@@ -954,6 +954,58 @@ aws ec2 authorize-security-group-ingress \
     --port 5432 \
     --source-group ${POD_SG}
 ```  
+### RDS CREATION
+```
+export PUBLIC_SUBNETS_ID=$(aws ec2 describe-subnets \
+    --filters "Name=vpc-id,Values=$VPC_ID" "Name=tag:Name,Values=eksctl-eksworkshop-eksctl-cluster/SubnetPublic*" \
+    --query 'Subnets[*].SubnetId' \
+    --output json | jq -c .)
+
+# create a db subnet group
+aws rds create-db-subnet-group \
+    --db-subnet-group-name rds-eksworkshop \
+    --db-subnet-group-description rds-eksworkshop \
+    --subnet-ids ${PUBLIC_SUBNETS_ID}
+# get RDS SG ID
+export RDS_SG=$(aws ec2 describe-security-groups \
+    --filters Name=group-name,Values=RDS_SG Name=vpc-id,Values=${VPC_ID} \
+    --query "SecurityGroups[0].GroupId" --output text)
+
+# generate a password for RDS
+export RDS_PASSWORD="$(date | md5sum  |cut -f1 -d' ')"
+echo ${RDS_PASSWORD}  > ~/environment/sg-per-pod/rds_password
+
+
+# create RDS Postgresql instance
+aws rds create-db-instance \
+    --db-instance-identifier rds-eksworkshop \
+    --db-name eksworkshop \
+    --db-instance-class db.t3.micro \
+    --engine postgres \
+    --db-subnet-group-name rds-eksworkshop \
+    --vpc-security-group-ids $RDS_SG \
+    --master-username eksworkshop \
+    --publicly-accessible \
+    --master-user-password ${RDS_PASSWORD} \
+    --backup-retention-period 0 \
+    --allocated-storage 20  
+```  
+```
+aws rds describe-db-instances \
+    --db-instance-identifier rds-eksworkshop \
+    --query "DBInstances[].DBInstanceStatus" \
+    --output text
+## make sure the DB is available  
+```
+```
+# get RDS endpoint
+export RDS_ENDPOINT=$(aws rds describe-db-instances \
+    --db-instance-identifier rds-eksworkshop \
+    --query 'DBInstances[0].Endpoint.Address' \
+    --output text)
+
+echo "RDS endpoint: ${RDS_ENDPOINT}"
+```  
   
 ############################################### SECURITY GROUPS FOR PODS  
   
