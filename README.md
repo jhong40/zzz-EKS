@@ -1190,6 +1190,32 @@ aws ec2 revoke-security-group-ingress \
 aws ec2 delete-security-group \
     --group-id ${POD_SG}
 ```
+```
+## wait until DB deleted
+aws rds describe-db-instances \
+    --db-instance-identifier rds-eksworkshop \
+    --query "DBInstances[].DBInstanceStatus" \
+    --output text
+```
+```
+# delete RDS SG
+aws ec2 delete-security-group \
+    --group-id ${RDS_SG}
+
+# delete DB subnet group
+aws rds delete-db-subnet-group \
+    --db-subnet-group-name rds-eksworkshop
+```  
+```
+# delete the nodegroup
+eksctl delete nodegroup -f ${HOME}/environment/sg-per-pod/nodegroup-sec-group.yaml --approve
+
+# remove the trunk label
+kubectl label node  --all 'vpc.amazonaws.com/has-trunk-attached'-
+
+cd ~/environment
+rm -rf sg-per-pod
+```  
   
   
 ############################################### SECURITY GROUPS FOR PODS  
