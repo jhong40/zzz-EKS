@@ -1308,9 +1308,44 @@ kubectl apply -f allow-ui-client.yaml
 ```
 ### ALLOW Directional Traffic  
 ```
-cd ~/environment/calico_resources
-wget https://eksworkshop.com/beginner/120_network-policies/calico/stars_policy_demo/directional_traffic.files/backend-policy.yaml
-wget https://eksworkshop.com/beginner/120_network-policies/calico/stars_policy_demo/directional_traffic.files/frontend-policy.yaml
+cat <<EOF | kubectl apply -f -
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  namespace: stars
+  name: backend-policy
+spec:
+  podSelector:
+    matchLabels:
+      role: backend
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              role: frontend
+      ports:
+        - protocol: TCP
+          port: 6379
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  namespace: stars
+  name: frontend-policy
+spec:
+  podSelector:
+    matchLabels:
+      role: frontend
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              role: client
+      ports:
+        - protocol: TCP
+          port: 80  
+EOF
+  
   
 ``` 
 
