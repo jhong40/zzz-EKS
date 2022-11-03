@@ -1069,7 +1069,28 @@ kubectl -n sg-per-pod apply -f ~/environment/sg-per-pod/sg-policy.yaml
 kubectl -n sg-per-pod describe securitygrouppolicy
   
 ```
+### PODS DEPLOYMENTS
+```
+export RDS_PASSWORD=$(cat ~/environment/sg-per-pod/rds_password)
+
+export RDS_ENDPOINT=$(aws rds describe-db-instances \
+    --db-instance-identifier rds-eksworkshop \
+    --query 'DBInstances[0].Endpoint.Address' \
+    --output text)
+
+kubectl create secret generic rds\
+    --namespace=sg-per-pod \
+    --from-literal="password=${RDS_PASSWORD}" \
+    --from-literal="host=${RDS_ENDPOINT}"
+
+kubectl -n sg-per-pod describe  secret rds
+
+cd ~/environment/sg-per-pod
+
+curl -s -O https://www.eksworkshop.com/beginner/115_sg-per-pod/deployments.files/green-pod.yaml
+curl -s -O https://www.eksworkshop.com/beginner/115_sg-per-pod/deployments.files/red-pod.yaml
   
+```  
   
 ############################################### SECURITY GROUPS FOR PODS  
   
