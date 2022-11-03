@@ -1101,15 +1101,15 @@ kubectl -n sg-per-pod  logs -f ${GREEN_POD_NAME}  # should see 'Welcome to the e
 ```  
 kubectl -n sg-per-pod  describe pod $GREEN_POD_NAME | head -11
 ```  
-```
+
   
-```
+
   
-```  
+  
   
 ############################################### SECURITY GROUPS FOR PODS  
   
-  </details>  
+</details>  
 
 <details>
   <summary>EFS</summary>
