@@ -1089,6 +1089,21 @@ cd ~/environment/sg-per-pod
 
 curl -s -O https://www.eksworkshop.com/beginner/115_sg-per-pod/deployments.files/green-pod.yaml
 curl -s -O https://www.eksworkshop.com/beginner/115_sg-per-pod/deployments.files/red-pod.yaml
+
+```
+```  
+kubectl -n sg-per-pod apply -f ~/environment/sg-per-pod/green-pod.yaml
+kubectl -n sg-per-pod rollout status deployment green-pod
+
+export GREEN_POD_NAME=$(kubectl -n sg-per-pod get pods -l app=green-pod -o jsonpath='{.items[].metadata.name}')
+kubectl -n sg-per-pod  logs -f ${GREEN_POD_NAME}  # should see 'Welcome to the eksworkshop'
+```
+```  
+kubectl -n sg-per-pod  describe pod $GREEN_POD_NAME | head -11
+```  
+```
+  
+```
   
 ```  
   
