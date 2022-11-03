@@ -991,11 +991,11 @@ aws rds create-db-instance \
     --allocated-storage 20  
 ```  
 ```
+## Wait for a few min make sure the DB is available  
 aws rds describe-db-instances \
     --db-instance-identifier rds-eksworkshop \
     --query "DBInstances[].DBInstanceStatus" \
     --output text
-## make sure the DB is available  
 ```
 ```
 # get RDS endpoint
