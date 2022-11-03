@@ -1022,7 +1022,7 @@ export RDS_PASSWORD=$(cat ~/environment/sg-per-pod/rds_password)
 psql postgresql://eksworkshop:${RDS_PASSWORD}@${RDS_ENDPOINT}:5432/eksworkshop \
     -f ~/environment/sg-per-pod/pgsql.sql
 ```  
-### CNI CONFIGURATION
+### CNI CONFIGURATION (*** ENABLE_POD_ENI=true on aws-node daemon set ***)
 ```
 ### IAM Role -> search 'eks' -> select eksctl-eksworkshop-eksctl-nodegro-NodeInstanceRole-xxx -> check tag -> find nodegroup-sec-group -> good one
 export ROLE_NAME=eksctl-eksworkshop-eksctl-nodegro-NodeInstanceRole-IM1FA4ZJF4MT  
