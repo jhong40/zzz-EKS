@@ -1221,6 +1221,50 @@ rm -rf sg-per-pod
 ############################################### SECURITY GROUPS FOR PODS  
   
 </details>  
+  
+<details>
+  <summary>SECURING YOUR CLUSTER WITH NETWORK POLICIES</summary>
+
+### Install Calico
+```
+kubectl apply -f https://raw.githubusercontent.com/aws/amazon-vpc-cni-k8s/release-1.6/config/v1.6/calico.yaml
+kubectl get daemonset calico-node --namespace=kube-system
+```
+### Create Resource
+```
+mkdir ~/environment/calico_resources
+cd ~/environment/calico_resources
+cd ~/environment/calico_resources
+wget https://eksworkshop.com/beginner/120_network-policies/calico/stars_policy_demo/create_resources.files/namespace.yaml
+kubectl apply -f namespace.yaml  # create ns stars
+```
+```
+cd ~/environment/calico_resources
+wget https://eksworkshop.com/beginner/120_network-policies/calico/stars_policy_demo/create_resources.files/management-ui.yaml
+wget https://eksworkshop.com/beginner/120_network-policies/calico/stars_policy_demo/create_resources.files/backend.yaml
+wget https://eksworkshop.com/beginner/120_network-policies/calico/stars_policy_demo/create_resources.files/frontend.yaml
+wget https://eksworkshop.com/beginner/120_network-policies/calico/stars_policy_demo/create_resources.files/client.yaml
+```
+```  
+kubectl apply -f management-ui.yaml
+kubectl apply -f backend.yaml
+kubectl apply -f frontend.yaml
+kubectl apply -f client.yaml
+kubectl get pods --all-namespaces
+```  
+
+  
+
+  
+</details>  
+  
+  
+  
+  
+  
+  
+  
+  
 
 <details>
   <summary>EFS</summary>
