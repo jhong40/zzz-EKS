@@ -1031,6 +1031,19 @@ aws iam attach-role-policy \
     --role-name ${ROLE_NAME}
   
 ```  
+```
+kubectl -n kube-system set env daemonset aws-node ENABLE_POD_ENI=true
+
+# let's wait for the rolling update of the daemonset
+kubectl -n kube-system rollout status ds aws-node
+```
+```
+ kubectl get nodes \
+  --selector  eks.amazonaws.com/nodegroup=nodegroup-sec-group \
+  --show-labels
+
+ ## has-trunke-attached=true  
+```  
   
 ############################################### SECURITY GROUPS FOR PODS  
   
