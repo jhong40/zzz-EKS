@@ -1252,7 +1252,10 @@ kubectl apply -f frontend.yaml
 kubectl apply -f client.yaml
 kubectl get pods --all-namespaces
 ```  
-
+### DEFAULT POD-TO-POD COMMUNICATION
+```
+kubectl get svc -o wide -n management-ui
+```  
   
 
   
