@@ -1347,10 +1347,10 @@ spec:
           port: 80  
 EOF
 ```  
-  
-
-
-  
+### CLEANUP
+```
+kubectl delete namespace client stars management-ui
+```  
 </details>  
   
   
