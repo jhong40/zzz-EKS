@@ -1099,7 +1099,8 @@ export GREEN_POD_NAME=$(kubectl -n sg-per-pod get pods -l app=green-pod -o jsonp
 kubectl -n sg-per-pod  logs -f ${GREEN_POD_NAME}  # should see 'Welcome to the eksworkshop'
 ```
 ```  
-kubectl -n sg-per-pod  describe pod $GREEN_POD_NAME | head -11
+kubectl -n sg-per-pod  describe pod $GREEN_POD_NAME | head -11   
+## nnotations: vpc.amazonaws.com/pod-eni: [{"eniId":"eni0cd582c35b2ea798c","ifAddress":"06:3d:84:b5:cc:3e","privateIp":"192.168.27.99","vlanId":1,"subnetCidr":"192.168.0.0/19"}]  
 ```  
 
   
