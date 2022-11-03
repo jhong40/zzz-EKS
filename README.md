@@ -1255,8 +1255,64 @@ kubectl get pods --all-namespaces
 ### DEFAULT POD-TO-POD COMMUNICATION
 ```
 kubectl get svc -o wide -n management-ui
+## http://lbaddress
 ```  
+### APPLY NETWORK POLICIES
+```
+cd ~/environment/calico_resources
+wget https://eksworkshop.com/beginner/120_network-policies/calico/stars_policy_demo/apply_network_policies.files/default-deny.yaml
+
+kubectl apply -n stars -f default-deny.yaml
+kubectl apply -n client -f default-deny.yaml 
+```  
+```
+cd ~/environment/calico_resources
+wget https://eksworkshop.com/beginner/120_network-policies/calico/stars_policy_demo/apply_network_policies.files/allow-ui.yaml
+wget https://eksworkshop.com/beginner/120_network-policies/calico/stars_policy_demo/apply_network_policies.files/allow-ui-client.yaml
+```  
+cat allow-ui.yaml
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  namespace: stars
+  name: allow-ui
+spec:
+  podSelector:
+    matchLabels: {}
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              role: management-ui
   
+cat allow-ui-client.yaml
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  namespace: client
+  name: allow-ui
+spec:
+  podSelector:
+    matchLabels: {}
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              role: management-ui  
+```
+```
+kubectl apply -f allow-ui.yaml
+kubectl apply -f allow-ui-client.yaml
+
+### See mngm UI - only see B, F, C  
+```
+### ALLOW Directional Traffic  
+```
+cd ~/environment/calico_resources
+wget https://eksworkshop.com/beginner/120_network-policies/calico/stars_policy_demo/directional_traffic.files/backend-policy.yaml
+wget https://eksworkshop.com/beginner/120_network-policies/calico/stars_policy_demo/directional_traffic.files/frontend-policy.yaml
+  
+``` 
 
   
 </details>  
