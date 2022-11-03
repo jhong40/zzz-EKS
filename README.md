@@ -1005,6 +1005,22 @@ export RDS_ENDPOINT=$(aws rds describe-db-instances \
     --output text)
 
 echo "RDS endpoint: ${RDS_ENDPOINT}"
+```
+### Create table  
+```
+cd ~/environment/sg-per-pod/sg-per-pod
+
+cat << EoF > ~/environment/sg-per-pod/pgsql.sql
+CREATE TABLE welcome (column1 TEXT);
+insert into welcome values ('--------------------------');
+insert into welcome values ('Welcome to the eksworkshop');
+insert into welcome values ('--------------------------');
+EoF
+
+export RDS_PASSWORD=$(cat ~/environment/sg-per-pod/rds_password)
+
+psql postgresql://eksworkshop:${RDS_PASSWORD}@${RDS_ENDPOINT}:5432/eksworkshop \
+    -f ~/environment/sg-per-pod/pgsql.sql
 ```  
   
 ############################################### SECURITY GROUPS FOR PODS  
