@@ -1044,6 +1044,32 @@ kubectl -n kube-system rollout status ds aws-node
 
  ## has-trunke-attached=true  
 ```  
+### SECURITYGROUP POLICY
+```
+## verifiy the SecurityGroupPolicy CRD   
+kubectl get crd securitygrouppolicies.vpcresources.k8s.aws  
+```  
+```
+cat << EoF > ~/environment/sg-per-pod/sg-policy.yaml
+apiVersion: vpcresources.k8s.aws/v1beta1
+kind: SecurityGroupPolicy
+metadata:
+  name: allow-rds-access
+spec:
+  podSelector:
+    matchLabels:
+      app: green-pod
+  securityGroups:
+    groupIds:
+      - ${POD_SG}
+EoF
+  
+kubectl create namespace sg-per-pod
+kubectl -n sg-per-pod apply -f ~/environment/sg-per-pod/sg-policy.yaml
+kubectl -n sg-per-pod describe securitygrouppolicy
+  
+```
+  
   
 ############################################### SECURITY GROUPS FOR PODS  
   
