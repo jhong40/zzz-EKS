@@ -1462,16 +1462,18 @@ eksctl utils associate-iam-oidc-provider \
     --region ${AWS_REGION} \
     --cluster eksworkshop-eksctl \
     --approve
+                           
                                    
 curl -o iam_policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/${LBC_VERSION}/docs/install/iam_policy.json
 aws iam create-policy \
     --policy-name AWSLoadBalancerControllerIAMPolicy \
     --policy-document file://iam_policy.json
+## :aws:->:aws-us-gov                                   
 eksctl create iamserviceaccount \
   --cluster eksworkshop-eksctl \
   --namespace kube-system \
   --name aws-load-balancer-controller \
-  --attach-policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy \
+  --attach-policy-arn arn:aws-us-gov:iam::${ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy \
   --override-existing-serviceaccounts \
   --approve
 
