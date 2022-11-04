@@ -1465,10 +1465,11 @@ eksctl utils associate-iam-oidc-provider \
                            
                                    
 curl -o iam_policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/${LBC_VERSION}/docs/install/iam_policy.json
+sed -i 's/:aws:/:aws-us-gov:/' iam_policy.json  ## aws->aws-us-gov   
 aws iam create-policy \
     --policy-name AWSLoadBalancerControllerIAMPolicy \
     --policy-document file://iam_policy.json
-sed -i 's/:aws:/:aws-us-gov:/' iam_policy.json  ## aws->aws-us-gov                                   
+                                
 ## :aws:->:aws-us-gov                                   
 eksctl create iamserviceaccount \
   --cluster eksworkshop-eksctl \
