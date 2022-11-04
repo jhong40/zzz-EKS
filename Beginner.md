@@ -1474,7 +1474,8 @@ eksctl create iamserviceaccount \
   --attach-policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy \
   --override-existing-serviceaccounts \
   --approve
-                                   
+
+## TargetGroupBinding CRD                                   
 kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller/crds?ref=master"
 kubectl get crd  
 ```  
