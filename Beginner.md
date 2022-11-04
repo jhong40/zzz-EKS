@@ -1561,8 +1561,9 @@ eksctl delete iamserviceaccount \
     --namespace kube-system \
     --wait
 
+### aws->aws-us-gov  
 aws iam delete-policy \
-    --policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy
+    --policy-arn arn:aws-us-gov:iam::${ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy
 ```  
   
   
