@@ -1521,11 +1521,13 @@ fi
 
 kubectl get ingress/ingress-2048 -n game-2048
 export GAME_INGRESS_NAME=$(kubectl -n game-2048 get targetgroupbindings -o jsonpath='{.items[].metadata.name}')
-kubectl -n game-2048 get targetgroupbindings ${GAME_INGRESS_NAME} -o yaml
-
-  
+kubectl -n game-2048 get targetgroupbindings ${GAME_INGRESS_NAME} -o yaml 
 ```  
-  
+```
+### Access the app  
+export GAME_2048=$(kubectl get ingress/ingress-2048 -n game-2048 -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+echo http://${GAME_2048}
+```        
   
   
   
