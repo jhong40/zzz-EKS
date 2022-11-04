@@ -1496,8 +1496,35 @@ helm upgrade -i aws-load-balancer-controller \
     --set image.tag="${LBC_VERSION}" \
     --version="${LBC_CHART_VERSION}"
 
+## https://docs.aws.amazon.com/eks/latest/userguide/add-ons-images.html
+## us-gov-west-1	013241004608.dkr.ecr.us-gov-west-1.amazonaws.com  
+## kubectl -n kube-system edit deployment aws-load-balancer-controller   # image replace
+  
 kubectl -n kube-system rollout status deployment aws-load-balancer-controller
 ```                                   
+
+### Deploy Sample Application
+```
+export EKS_CLUSTER_VERSION=$(aws eks describe-cluster --name eksworkshop-eksctl --query cluster.version --output text)
+
+if [ "`echo "${EKS_CLUSTER_VERSION} < 1.19" | bc`" -eq 1 ]; then     
+    curl -s https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.3.1/docs/examples/2048/2048_full.yaml \
+    | sed 's=alb.ingress.kubernetes.io/target-type: ip=alb.ingress.kubernetes.io/target-type: instance=g' \
+    | kubectl apply -f -
+fi
+
+if [ "`echo "${EKS_CLUSTER_VERSION} >= 1.19" | bc`" -eq 1 ]; then     
+    curl -s https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.3.1/docs/examples/2048/2048_full_latest.yaml \
+    | sed 's=alb.ingress.kubernetes.io/target-type: ip=alb.ingress.kubernetes.io/target-type: instance=g' \
+    | kubectl apply -f -
+fi
+
+kubectl get ingress/ingress-2048 -n game-2048
+export GAME_INGRESS_NAME=$(kubectl -n game-2048 get targetgroupbindings -o jsonpath='{.items[].metadata.name}')
+kubectl -n game-2048 get targetgroupbindings ${GAME_INGRESS_NAME} -o yaml
+
+  
+```  
   
   
   
