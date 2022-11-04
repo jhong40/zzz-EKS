@@ -1397,7 +1397,39 @@ export MyClusterIP=$(kubectl -n my-nginx get svc my-nginx -ojsonpath='{.spec.clu
 # Create a new deployment and allocate a TTY for the container in the pod
 kubectl -n my-nginx run -i --tty load-generator --env="MyClusterIP=${MyClusterIP}" --image=busybox /bin/sh
   wget -q -O - ${MyClusterIP} | grep '<title>'
+  exit
 ```  
+### Access Service
+- Environment variables
+- DNS
+```
+kubectl -n my-nginx get pods -l run=my-nginx -o wide
+export mypod=$(kubectl -n my-nginx get pods -l run=my-nginx -o jsonpath='{.items[0].metadata.name}')
+kubectl -n my-nginx exec ${mypod} -- printenv | grep SERVICE
+## will not see the service
+  
+kubectl -n my-nginx rollout restart deployment my-nginx
+kubectl -n my-nginx get pods -l run=my-nginx -o wide
+
+export mypod=$(kubectl -n my-nginx get pods -l run=my-nginx -o jsonpath='{.items[0].metadata.name}')
+kubectl -n my-nginx exec ${mypod} -- printenv | grep SERVICE
+
+### KUBERNETES_SERVICE_HOST=10.100.0.1
+### KUBERNETES_SERVICE_PORT=443
+### KUBERNETES_SERVICE_PORT_HTTPS=443
+### MY_NGINX_SERVICE_HOST=10.100.225.196
+### MY_NGINX_SERVICE_PORT=80  
+```
+```
+kubectl get service -n kube-system -l k8s-app=kube-dns
+kubectl -n my-nginx run curl --image=radial/busyboxplus:curl -i --tty
+  nslookup my-nginx
+  exit
+```
+  
+  
+  
+  
 </details>
   
   
