@@ -1429,7 +1429,7 @@ kubectl -n my-nginx run curl --image=radial/busyboxplus:curl -i --tty
 ### EXPOSING THE SERVICE
 ```
 kubectl -n my-nginx get svc my-nginx
-kubectl -n my-nginx patch svc my-nginx -p '{"spec": {"type": "LoadBalancer"}}'
+kubectl -n my-nginx patch svc my-nginx -p '{"spec": {"type": "LoadBalancer"}}'  # -> classic LB
 kubectl -n my-nginx get svc my-nginx
 ```
 ```
@@ -1438,7 +1438,60 @@ curl -k -s http://${loadbalancer} | grep title
 kubectl -n my-nginx describe service my-nginx | grep Ingress 
 ```
   
+### INGRESS CONTROLLER
+Unlike other types of controllers which run as part of the kube-controller-manager binary, Ingress controllers are not started automatically with a cluster.  
+AWS Load Balancer Controller  ( <- AWS ALB controller)
+- It satisfies Kubernetes Ingress resources by provisioning Application Load Balancers.
+- It satisfies Kubernetes Service resources by provisioning Network Load Balancers.                                   
+  
+```
+# export LBC_VERSION="v2.4.1"
+# export LBC_CHART_VERSION="1.4.1"
+                                   
+if [ ! -x ${LBC_VERSION} ]
+  then
+    tput setaf 2; echo '${LBC_VERSION} has been set.'
+  else
+    tput setaf 1;echo '${LBC_VERSION} has NOT been set.'
+fi
+```
+```                                   
+helm version --short
+                                   
+eksctl utils associate-iam-oidc-provider \
+    --region ${AWS_REGION} \
+    --cluster eksworkshop-eksctl \
+    --approve
+                                   
+curl -o iam_policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/${LBC_VERSION}/docs/install/iam_policy.json
+aws iam create-policy \
+    --policy-name AWSLoadBalancerControllerIAMPolicy \
+    --policy-document file://iam_policy.json
+eksctl create iamserviceaccount \
+  --cluster eksworkshop-eksctl \
+  --namespace kube-system \
+  --name aws-load-balancer-controller \
+  --attach-policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy \
+  --override-existing-serviceaccounts \
+  --approve
+                                   
+kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller/crds?ref=master"
+kubectl get crd  
+```  
+```
+helm repo add eks https://aws.github.io/eks-charts
 
+helm upgrade -i aws-load-balancer-controller \
+    eks/aws-load-balancer-controller \
+    -n kube-system \
+    --set clusterName=eksworkshop-eksctl \
+    --set serviceAccount.create=false \
+    --set serviceAccount.name=aws-load-balancer-controller \
+    --set image.tag="${LBC_VERSION}" \
+    --version="${LBC_CHART_VERSION}"
+
+kubectl -n kube-system rollout status deployment aws-load-balancer-controller
+```                                   
   
   
   
