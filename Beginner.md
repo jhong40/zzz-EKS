@@ -1571,6 +1571,46 @@ aws iam delete-policy \
 </details>
   
   
+<details>
+  <summary>Assigned Pod to Node</summary>
+  
+```
+kubectl get nodes
+kubectl get nodes --selector disktype=ssd  
+```
+```
+# export the first node name as a variable
+export FIRST_NODE_NAME=$(kubectl get nodes -o json | jq -r '.items[0].metadata.name')
+
+# add the label to the node
+kubectl label nodes ${FIRST_NODE_NAME} disktype=ssd
+kubectl get nodes --selector disktype=ssd  
+``` 
+```
+cat <<EoF > ~/environment/pod-nginx.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    env: test
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    imagePullPolicy: IfNotPresent
+  nodeSelector:
+    disktype: ssd
+EoF
+kubectl apply -f ~/environment/pod-nginx.yaml
+kubectl get pods -o wide
+  
+```  
+</details>
+  
+  
+  
+  
   
   
   
