@@ -1604,8 +1604,52 @@ spec:
 EoF
 kubectl apply -f ~/environment/pod-nginx.yaml
 kubectl get pods -o wide
-  
 ```  
+## AFFINITY AND ANTI-AFFINITY
+```
+# export the first node name as a variable
+export FIRST_NODE_NAME=$(kubectl get nodes -o json | jq -r '.items[0].metadata.name')
+
+kubectl label nodes ${FIRST_NODE_NAME} azname=az1
+
+cat <<EoF > ~/environment/pod-with-node-affinity.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: with-node-affinity
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: azname
+            operator: In
+            values:
+            - az1
+            - az2
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+          - key: another-node-label-key
+            operator: In
+            values:
+            - another-node-label-value
+  containers:
+  - name: with-node-affinity
+    image: us.gcr.io/k8s-artifacts-prod/pause:2.0
+EoF
+kubectl apply -f ~/environment/pod-with-node-affinity.yaml
+kubectl get pods -o wide  
+```  
+  
+```
+kubectl delete -f ~/environment/pod-with-node-affinity.yaml
+
+kubectl label nodes ${FIRST_NODE_NAME} azname-
+```  
+  
 </details>
   
   
