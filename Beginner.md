@@ -1657,6 +1657,10 @@ kubectl label nodes ${SECOND_NODE_NAME} azname=az1
 kubectl apply -f ~/environment/pod-with-node-affinity.yaml
   
 kubectl get pods -o wide  
+```
+```
+kubectl delete -f ~/environment/pod-nginx.yaml
+kubectl delete -f ~/environment/pod-with-node-affinity.yaml
 ```  
   
 </details>
