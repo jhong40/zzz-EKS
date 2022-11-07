@@ -1649,6 +1649,15 @@ kubectl delete -f ~/environment/pod-with-node-affinity.yaml
 
 kubectl label nodes ${FIRST_NODE_NAME} azname-
 ```  
+### Second Node  
+```
+export SECOND_NODE_NAME=$(kubectl get nodes -o json | jq -r '.items[1].metadata.name')
+
+kubectl label nodes ${SECOND_NODE_NAME} azname=az1
+kubectl apply -f ~/environment/pod-with-node-affinity.yaml
+  
+kubectl get pods -o wide  
+```  
   
 </details>
   
