@@ -1692,7 +1692,8 @@ spec:
       containers:
       - name: redis-server
         image: redis:3.2-alpine
-EoF 
+EoF
+
 ```
 ```
 cat <<EoF > ~/environment/web-with-node-affinity.yaml
@@ -1733,6 +1734,7 @@ spec:
       - name: web-app
         image: nginx:1.12-alpine
 EoF
+  
 ```
 ```
 kubectl apply -f ~/environment/redis-with-node-affinity.yaml
